@@ -235,6 +235,7 @@ class CrmLead(models.Model):
         'crm.lost.reason', string='Lost Reason',
         index=True, ondelete='restrict', tracking=71)
     # Statistics
+    lead_score = fields.Integer(string="Lead Score", compute="_compute_lead_score", store=True)
     calendar_event_ids = fields.One2many('calendar.event', 'opportunity_id', string='Meetings')
     duplicate_lead_ids = fields.Many2many("crm.lead", compute="_compute_potential_lead_duplicates", string="Potential Duplicate Lead",
         context={"active_test": False}, compute_sudo=True)
@@ -618,6 +619,16 @@ class CrmLead(models.Model):
                 lead.won_status = 'lost'
             else:
                 lead.won_status = 'pending'
+
+    @api.depends('email_from', 'phone')
+    def _compute_lead_score(self):
+        for lead in self:
+            score = 0
+            if lead.email_from:
+                score += 20
+            if lead.phone:
+                score += 20
+            lead.lead_score = score
 
     @api.depends('email_domain_criterion', 'email_normalized', 'partner_id',
                  'phone_sanitized')
