@@ -1,37 +1,19 @@
-# Odoo
+Odoo CRM - Lead Score Özelliği Geliştirme Raporu 
+Bu rapor, Odoo CRM modülüne eklediğim "Müşteri Adayı Puanlama" (Lead Scoring) özelliğinin detaylarını ve teknik sürecini içermektedir.
 
-[![Build Status](https://runbot.odoo.com/runbot/badge/flat/1/master.svg)](https://runbot.odoo.com/runbot)
-[![Tech Doc](https://img.shields.io/badge/master-docs-875A7B.svg?style=flat&colorA=8F8F8F)](https://www.odoo.com/documentation/master)
-[![Help](https://img.shields.io/badge/master-help-875A7B.svg?style=flat&colorA=8F8F8F)](https://www.odoo.com/forum/help-1)
-[![Nightly Builds](https://img.shields.io/badge/master-nightly-875A7B.svg?style=flat&colorA=8F8F8F)](https://nightly.odoo.com/)
+Özelliğin Amacı Sisteme düşen müşteri adaylarının kalitesini ölçmek ve satış ekibinin en değerli adaylara öncelik vermesini sağlamak amacıyla bir puanlama sistemi geliştirdim. Bu sistem, iletişim bilgileri tam olan adaylara daha yüksek puan vererek onları öne çıkarır.
 
-Odoo is a suite of web based open source business apps.
+Uyguladığım Teknik Değişiklikler
 
-The main Odoo Apps include an [Open Source CRM](https://www.odoo.com/page/crm),
-[Website Builder](https://www.odoo.com/app/website),
-[eCommerce](https://www.odoo.com/app/ecommerce),
-[Warehouse Management](https://www.odoo.com/app/inventory),
-[Project Management](https://www.odoo.com/app/project),
-[Billing &amp; Accounting](https://www.odoo.com/app/accounting),
-[Point of Sale](https://www.odoo.com/app/point-of-sale-shop),
-[Human Resources](https://www.odoo.com/app/employees),
-[Marketing](https://www.odoo.com/app/social-marketing),
-[Manufacturing](https://www.odoo.com/app/manufacturing),
-[...](https://www.odoo.com/)
+Veri Modeli Geliştirmesi (Python) addons/crm/models/crm_lead.py dosyasında şu değişiklikleri yaptım:
+lead_score adında yeni bir veritabanı alanı tanımladım. Puanı otomatik hesaplayan _compute_lead_score fonksiyonunu yazdım. 
+Puanlama Kriteri: E-posta adresi varsa +20 puan, telefon numarası varsa +20 puan eklenir (Maksimum 40 puan).
+2. Arayüz Entegrasyonu (XML) addons/crm/views/crm_lead_views.xml dosyasını güncelleyerek:
 
-Odoo Apps can be used as stand-alone applications, but they also integrate seamlessly so you get
-a full-featured [Open Source ERP](https://www.odoo.com) when you install several Apps.
+Hesaplanan puanın hem "Aday" (Lead) hem de "Fırsat" (Opportunity) ekranlarında görünmesini sağladım. 
+Kullanıcı dostu olması için alanı "Priority" (Öncelik) bölümünün hemen altına konumlandırdım. 
 
-## Getting started with Odoo
+Kullanım ve Sonuç 
+Bir müşteri adayı girildiğinde veya güncellendiğinde, sistem iletişim bilgilerini kontrol ederek puanı anında hesaplar. Bu sayede CRM ekranında her adayın yanında sayısal bir kalite skoru görünür.
 
-For a standard installation please follow the [Setup instructions](https://www.odoo.com/documentation/master/administration/install/install.html)
-from the documentation.
-
-To learn the software, we recommend the [Odoo eLearning](https://www.odoo.com/slides),
-or [Scale-up, the business game](https://www.odoo.com/page/scale-up-business-game).
-Developers can start with [the developer tutorials](https://www.odoo.com/documentation/master/developer/howtos.html).
-
-## Security
-
-If you believe you have found a security issue, check our [Responsible Disclosure page](https://www.odoo.com/security-report)
-for details and get in touch with us via email.
+Bu geliştirme, projenin çatallanmış (fork) versiyonuna feat: add lead scoring feature to CRM module mesajıyla eklenmeye hazırdır.
